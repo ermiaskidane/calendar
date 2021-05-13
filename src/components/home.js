@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Calendar from "react-calendar"
+import { listEv } from "../store/actions/listActions";
 import 'react-calendar/dist/Calendar.css';
 import '../App.css';
 
@@ -8,6 +10,18 @@ const Home = ({history}) => {
   const [ todo, setToDo ] = useState("")
   const [ lists, setlists] = useState([])
 
+  const dispatch = useDispatch();
+
+  const listEvent = useSelector((state) => state.listEvent);
+  const { loading, error, listInfo } = listEvent;
+
+  useEffect(() => {
+    if(listInfo) {
+      setlists([listInfo])
+    }
+
+  }, [listInfo])
+
   const onChange = date => {
     setDate(date)
   }
@@ -15,10 +29,11 @@ const Home = ({history}) => {
   const submitHandler = (e) => {
     e.preventDefault()
     let dateCh = date.toString()
-    const data = {dateCh, todo}
-    console.log(data)
+    dispatch(listEv(todo, dateCh))
+    // const data = {dateCh, todo}
+    // console.log(data)
    
-    setlists([todo, data])
+    // setlists([data])
 }
 
 console.log(lists)
@@ -52,57 +67,6 @@ console.log(lists)
     </div>
   )
 }
-// function App() {
-//   return (
-//     <div className="App">
-//       <h1>Weekly Calander</h1>
-//       <div className="calander-table">
-//         <div className="table-head">
-//             <p>prev</p>
-//             <p>today</p>
-//             <p>next</p>
-//         </div>
-//         <table>
-//           <thead>
-//             <tr>
-//               <th></th>
-//               <th>sun</th>
-//               <th>mon</th>
-//               <th>tue</th>
-//               <th>wed</th>
-//               <th>thu</th>
-//               <th>fri</th>
-//               <th>sat</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             <tr className="table-column">
-//               <td className="table-rows">
-//                 6
-//                 <p>abc</p>
-//                 <p>abc</p>
-//                 <p>abc</p>
-//                 <p>abc</p>
-//                 <p>abc</p>
-//                 <p>abc</p>
-//                 <p>abc</p>
-//               </td>
-//               <td>9am</td>
-//               <td>10am</td>
-//               <td>11am</td>
-//               <td>12am</td>
-//               <td>1pm</td>
-//               <td>2pm</td>
-//               <td>3pm</td>
-//               <td>4pm</td>
-//               {/* <td>5pm</td>
-//               <td>6pm</td> */}
-//             </tr>
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
-// }
+
 
 export default Home;
